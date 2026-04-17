@@ -23,6 +23,27 @@ cit <- read_csv("siteinfo_fluxnet2015.csv")
 cit <- cit %>% dplyr::rename( site = mysitename ) %>% select( -elv_watch, -elv_diff, -years_data )
 
 
+# MF additions
+#drop CRO and WET
+cit <- cit %>% dplyr::filter(!classid %in% c("CRO", "WET"))
+print(cit$site)
+cit_sites <- cit$site
+lpj_used <- read.csv("~/LPJ-GUESS_used.csv")$x
+
+
+# identify which are not used (so can be dropped)
+drop_for_references <- cit_sites[which(!cit_sites %in% lpj_used)]
+
+# used in anlysis by currently missing#
+currently_missing <- lpj_used[ which(!lpj_used %in% cit_sites )]
+print(currently_missing)
+
+
+#stop()
+setwd(here('F15T1_LaTeX'))
+
+
+
 ##--------------------------------------------------------------------------------------------------------------
 ## Create big table with in-line citation keys for LaTeX
 ##--------------------------------------------------------------------------------------------------------------
@@ -75,3 +96,4 @@ system("open F15T1LaTex_fromR.pdf")
 
 # return to initial directory
 setwd(start_dir)
+
